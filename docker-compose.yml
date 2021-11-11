@@ -1,0 +1,35 @@
+version: '3.3'
+
+services:
+  db:
+    container_name: db
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+  prestashop:
+    container_name: prestashop
+    image: prestashop/prestashop
+    restart: always
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    environment:
+      - PS_LANGUAGE=pl
+      - PS_COUNTRY=PL
+    volumes:
+      - ./prestashop:/var/www/html
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 3000:80
+    environment:
+      PMA_HOST: db
